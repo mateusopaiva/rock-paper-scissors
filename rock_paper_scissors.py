@@ -1,96 +1,84 @@
 import random
-import os
+from utils import clear_screen
 
-move_list = ["Pedra", "Papel", "Tesoura"]
-player_count = 0
-computer_count = 0
+class RockPaperScissorsGame:
+    def __init__(self):
+        self.move_list = ["Pedra", "Papel", "Tesoura"]
+        self.player_count = 0
+        self.computer_count = 0
+        self.player_move = None
+        self.computer_move = None
+        self.winner = None
 
-print("=========================================")
-print("Bem vindo ao jogo: Pedra, papel e tesoura")
+    def main_print(self):
+        clear_screen()
+        print("=========================================")
+        print("\nPLACAR:")
+        print(f"Você: {self.player_count}")
+        print(f"Computador: {self.computer_count}")
+        print("\n")
+        print("Escolha uma jogada:")
+        print("0 - Pedra | 1 - Papel | 2 - Tesoura")
 
-def main_print():
-    print("=========================================")
-    print("\nPLACAR:")
-    print(f"Você: {player_count}")
-    print(f"Computador: {computer_count}")
-    print("\n")
-    print("Escolha uma jogada:")
-    print("0 - Pedra | 1 - Papel | 2 - Tesoura")
+    def get_player_move(self):
+        while True:
+            try:
+                player_move = int(input())
+                if player_move not in [0, 1, 2]:
+                    raise ValueError("Escolha inválida. Escolha 0, 1 ou 2.")
+                self.player_move = self.move_list[player_move]
+                return self.player_move
+            except ValueError as e:
+                print(e)
 
-def select_move():
-    return random.choice(move_list)
+    def select_move(self):
+        self.computer_move = random.choice(self.move_list)
+        return self.computer_move
 
-def get_player_move():
-    while True:
-        try:
-            player_move = int(input())
-            if player_move not in [0, 1, 2]:
-                raise ValueError("Escolha inválida. Escolha 0, 1 ou 2.")
-            return move_list[player_move]
-        except ValueError as e:
-            print(e)
-
-def select_winner(p_move, c_move):
-    global player_count, computer_count
-
-    if p_move == "Papel":
-        if c_move == "Pedra":
-            player_count += 1
-            return "p"
-        elif c_move == "Tesoura":
-            computer_count += 1
-            return "c"
+    def select_winner(self):
+        outcomes = {
+            ("Papel", "Pedra"): "Player",
+            ("Papel", "Tesoura"): "Computer",
+            ("Pedra", "Tesoura"): "Player",
+            ("Pedra", "Papel"): "Computer",
+            ("Tesoura", "Papel"): "Player",
+            ("Tesoura", "Pedra"): "Computer",
+        }
+        
+        if self.player_move == self.computer_move:
+            self.winner = "Draw"
         else:
-            return "d"
+            result = outcomes.get((self.player_move, self.computer_move))
+            if result == "Player":
+                self.player_count += 1
+            elif result == "Computer":
+                self.computer_count += 1
+            self.winner = result
 
-    if p_move == "Pedra":
-        if c_move == "Tesoura":
-            player_count += 1
-            return "p"
-        elif c_move == "Papel":
-            computer_count += 1
-            return "c"
+        print("===========================")
+        print(f"Sua jogada: {self.player_move.upper()}")
+        print(f"Jogada do computador: {self.computer_move.upper()}")
+
+        if self.winner == "Player":
+            print("Você venceu!")
+        elif self.winner == "Computer":
+            print("Você perdeu!")
         else:
-            return "d"
+            print("Empate!")
 
-    if p_move == "Tesoura":
-        if c_move == "Papel":
-            player_count += 1
-            return "p"
-        elif c_move == "Pedra":
-            computer_count += 1
-            return "c"
-        else:
-            return "d"
+        print("===========================")
 
-again = 1
-while again == 1:
-    main_print()
-    player_move = get_player_move()
-    computer_move = select_move()
-    winner = select_winner(player_move, computer_move)
-
-    print("")
-    print("===========================")
-    print(f"Sua jogada: {player_move.upper()}")
-    print(f"Jogada do computador: {computer_move.upper()}")
-
-    if winner == "p":
-        print("Você venceu!")
-    elif winner == "c":
-        print("Você perdeu!")
-    else:
-        print("Empate!")
-
-    print("===========================")
-
-    while True:
-        print("\nJogar novamente? 0 - NÃO | 1 - SIM")
-        next_move = int(input())
-        if next_move == 1:
-            break
-        elif next_move == 0:
-            again = 0
-            break
-
-    os.system("cls")
+    def play_again(self):
+        while True:
+            print("\nJogar novamente? 0 - NÃO | 1 - SIM")
+            try:
+                next_move = int(input())
+                if next_move == 0:
+                    print("Obrigado por jogar!")
+                    return
+                elif next_move == 1:
+                    break
+                else:
+                    print("Escolha inválida. Escolha 0 ou 1.")
+            except ValueError:
+                print("Escolha inválida. Digite 0 ou 1.")
