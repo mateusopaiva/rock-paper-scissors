@@ -75,9 +75,9 @@ class RockPaperScissorsGame:
                 next_move = int(input())
                 if next_move == 0:
                     print("Obrigado por jogar!")
-                    return
+                    return False
                 elif next_move == 1:
-                    break
+                    return True
                 else:
                     print("Escolha inválida. Escolha 0 ou 1.")
             except ValueError:

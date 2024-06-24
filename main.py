@@ -8,7 +8,8 @@ def main():
         game.get_player_move()
         game.select_move()
         game.select_winner()
-        game.play_again()
+        if not game.play_again():
+            break
 
 if __name__ == "__main__":
     main()
